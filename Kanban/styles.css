@@ -1,0 +1,180 @@
+@import url('https://fonts.googleapis.com/css2?family=Lobster&display=swap');
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Lobster", sans-serif;
+
+}
+
+body {
+    background-color: #e9ecef;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.board {
+    display: flex;
+    flex-wrap: wrap;
+    max-width: 1200px;
+    margin: auto;
+    gap: 20px;
+}
+
+.column {
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    width: 30%;
+    min-width: 300px;
+    min-height: 400px;
+    padding: 20px;
+    margin: 10px;
+    position: relative;
+}
+
+
+
+h2 {
+    text-align: center;
+    color: #4a4a4a;
+    font-size: 1.5em;
+    margin-bottom: 15px;
+}
+
+.tasks {
+    min-height: 400px;
+    margin: 10px 0;
+    padding: 10px;
+    border: 1px solid #d1d1d1;
+    /* Light border */
+    border-radius: 5px;
+    background-color: #f7f9fc;
+    /* Very light blue background */
+}
+
+.task-input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #007bff;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    transition: border-color 0.3s;
+}
+
+.task-input:focus {
+    border-color: #0056b3;
+    outline: none;
+}
+
+.add-task {
+    width: 100%;
+    padding: 10px;
+    background-color: #28a745;
+
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+.add-task:hover {
+    background-color: #218838;
+
+}
+
+.task {
+    background-color: #f1f1f1;
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.task button {
+    background-color: #dc3545;
+    /* Red button for delete */
+    border: none;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.task button:hover {
+    background-color: #c82333;
+    /* Darker red on hover */
+}
+
+.card {
+    background-color: #f9f9f9;
+    padding: 15px; 
+    margin-bottom: 15px; 
+    border-radius: 8px;
+    color: #333; 
+    cursor: grab; 
+    transition: transform 0.2s ease-in-out, opacity 0.2s ease-in-out; 
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); 
+}
+
+.card:hover {
+    transform: scale(1.05); 
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.menu{
+    position: absolute;
+    background-color: #fff;
+    padding: 10px 0;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    border-radius: 4px;
+    display: none;
+}
+.menu ul li{
+    list-style: none;
+    padding: 8px 20px;
+    cursor: pointer;
+   
+}
+.menu ul li:hover{
+    background-color: #2c6bcf9f;
+    transition: all 0.3s ease-in-out;
+}
+.time{
+    text-align: end;
+    display: block;
+    font-style: italic;
+    color: black;
+    font-size: 12px;
+}
+.dragging {
+    opacity: 0.5;
+    transform: scale(1.05);
+}
+@keyframes bounce {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+.card.dropped {
+    animation: bounce 0.3s ease-in-out;
+}
+
+.column .tasks.drag-over {
+    background-color: rgba(0, 0, 0, 0.1);
+    border: 2px dashed #007bff;
+    transition: background-color 0.2s ease-in-out;
+}
+@media (max-width: 768px) {
+    .column {
+        width: 100%;
+        margin: 10px 0;
+    }
+}
