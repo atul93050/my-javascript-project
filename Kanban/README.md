@@ -1,4 +1,5 @@
 # Task Manager Browser Extension
+![Task Manager Icon](icon.svg)
 
 ## Overview
 The **Task Manager Browser Extension** is a simple task-tracking tool that allows users to create, manage, and track their tasks within the browser. It features a drag-and-drop interface and stores tasks using the **Chrome Storage API**, ensuring persistence across browser sessions.
