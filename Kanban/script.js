@@ -1,5 +1,6 @@
 let dragcard = null
 let rightClicked = null
+document.addEventListener('DOMContentLoaded', loadTasks)
 function add_task(columnId) {
     const input = document.getElementById(`${columnId}-input`)
     //console.log(input)
@@ -13,6 +14,7 @@ function add_task(columnId) {
     const taskElement = createTaskElement(inputValue, taskDate);
 
     document.getElementById(`${columnId}-tasks`).appendChild(taskElement);
+    saveTasks(columnId, inputValue, taskDate)
     input.value = ""
     updateAllTasksCount()
 }
@@ -58,7 +60,7 @@ function dragEnd() {
     dragcard.style.transform = "scale(1)";
     dragcard.style.transition = "transform 0.2s ease-out";
     dragcard = null
-
+    updateTasks()
     updateAllTasksCount()
 
 
@@ -68,10 +70,38 @@ function dragEnd() {
 function dragOver(event) {
     event.preventDefault()
     this.classList.add("drag-over");
-    if (dragcard) {  //Check if dragcard is not null
-        this.appendChild(dragcard)
 
+    // if (dragcard) {  //Check if dragcard is not null
+    //     this.appendChild(dragcard)
+
+    // }
+
+    const afterElement = getDragAfterElement(this, event.pageY);
+    if (afterElement === null) {
+        this.appendChild(dragcard)
     }
+    else {
+        this.insertBefore(dragcard, afterElement)
+    }
+
+}
+
+function getDragAfterElement(container, y) {
+    const draggableElements = [
+        ...container.querySelectorAll(".card:not(.dragging")
+    ];
+    const result = draggableElements.reduce((closestElementUnderMouse, currentTask) => {
+        const box = currentTask.getBoundingClientRect()
+        const offset = y - box.top - box.height / 2;
+        if (offset < 0 && offset > closestElementUnderMouse.offset) {
+            return { offset: offset, element: currentTask }
+        }
+        else {
+            return closestElementUnderMouse
+        }
+    }, { offset: Number.NEGATIVE_INFINITY })
+
+    return result
 
 }
 
@@ -82,7 +112,6 @@ function showContextmenu(x, y) {
     contextmenu.style.left = `${x + window.scrollX}px`
     contextmenu.style.top = `${y + window.scrollY}px`
     contextmenu.style.display = "block"
-    console.log(contextmenu)
 }
 
 window.addEventListener("click", () => {
@@ -101,15 +130,18 @@ function editTask() {
         }
     }
     contextmenu.style.display = "none"
+    updateTasks()
 }
 
 function deleteTask() {
     if (rightClicked !== null) {
-        updateAllTasksCount()
+
         rightClicked.remove()
 
     }
     contextmenu.style.display = "none"
+    updateTasks()
+    updateAllTasksCount()
 }
 
 function updateAllTasksCount() {
@@ -117,4 +149,39 @@ function updateAllTasksCount() {
         const count = document.querySelectorAll(`#${columnId}-tasks .card`).length;
         document.getElementById(`${columnId}-count`).textContent = count;
     });
+}
+
+// save, retrieve, update tasks in local storage
+
+function saveTasks(columnId, inputValue, taskDate) {
+    const tasks = JSON.parse(localStorage.getItem(columnId))
+    taskDate.push({ text: inputValue, date: taskDate })
+    localStorage.setItem(columnId, JSON.stringify(tasks))
+
+}
+
+function loadTasks() {
+    ['todo', 'doing', 'done'].forEach((columnId) => {
+        const tasks = JSON.parse(localStorage.getItem(columnId)) || []
+        tasks.forEach(({ text, date }) => {
+            const taskElement = createTaskElement(text, date)
+            document.getElementById(`${columnId}-tasks`).appendChild(taskElement)
+        })
+
+    })
+}
+
+function updateTasks() {
+    ['todo', 'doing', 'done'].forEach((columnId) => {
+        const tasks = []
+        document.querySelectorAll(`#${columnId}-tasks .card`).forEach((card) => {
+            const taskText = card.querySelector("span").textContent
+            const taskDate = card.querySelector("small").textContent
+            tasks.push({ text: taskText, date: taskDate })
+
+        })
+        localStorage.setItem(columnId, JSON.stringify(tasks))
+
+        updateAllTasksCount()
+    })
 }
